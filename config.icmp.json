@@ -1,0 +1,68 @@
+{
+  "_comment": [
+    "Reference config for the ICMP carrier — multi-user (50-200) optimised.",
+    "Copy to BOTH servers, change only role, peer, local_ip and peer_ip.",
+    "obfs must stay \"none\". Needs CAP_NET_RAW; ICMP echo inbound must be allowed.",
+    "",
+    "Multi-user longevity knobs:",
+    "  rate_mbps=25 ±25%  — near measured ICMP path capacity (~30 Mbit/s), shared among users",
+    "  mtu=1200           — slightly higher efficiency for many concurrent flows",
+    "  pad_max=96         — still breaks size signature, lower overhead than 128",
+    "  keepalive=40       — quieter than 25, still responsive for many clients",
+    "  id_pool=8 / 90s    — max identifier diversity",
+    "  mimic_ping=true    — real-ping disguise (must match both ends)",
+    "",
+    "Wire settings (key/cipher/obfs/mimic/id_pool/id_rotate) MUST be identical on both ends."
+  ],
+  "role": "a",
+  "key": "PASTE_SAME_BASE64_KEY_ON_BOTH_SERVERS",
+  "cipher": "aes-gcm",
+  "listen": "0.0.0.0:51820",
+  "peer": "PUBLIC_IPV4_OF_THE_OTHER_SERVER",
+  "transport": "icmp",
+  "obfs": "none",
+  "tun_name": "tun0",
+  "local_ip": "10.8.0.1/24",
+  "peer_ip": "10.8.0.2",
+  "mtu": 1200,
+  "txqueuelen": 2000,
+  "rcvbuf": 4194304,
+  "sndbuf": 4194304,
+  "rate_mbps": 25,
+  "pad_max": 96,
+  "rekey_interval": 3600,
+  "keepalive": 40,
+  "manage_ip": true,
+  "stats_path": "/run/aestun/stats.json",
+  "dpi_log": {
+    "enabled": true,
+    "path": "/var/log/aestun/dpi.jsonl",
+    "probe": true
+  },
+  "desync": {
+    "enabled": false
+  },
+  "junk": {
+    "enabled": false
+  },
+  "hop": {
+    "enabled": false
+  },
+  "split": {
+    "enabled": false
+  },
+  "tcp_rotate": {
+    "enabled": false
+  },
+  "icmp": {
+    "readers": 0,
+    "batch": 32,
+    "kernel_filter": true,
+    "suppress_replies": true,
+    "id": 0,
+    "id_pool": 8,
+    "id_rotate_sec": 90,
+    "mimic_ping": true
+  },
+  "rate_jitter_pct": 25
+}
